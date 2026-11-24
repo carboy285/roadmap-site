@@ -66,7 +66,7 @@ ${body.replace(/(href|src)="(?!https?:|#|\.\.\/|\.\/|mailto:)/g, `$1="${depth ? 
 </main>
 <footer>
   <div class="wrap">
-    <span>© 2026 Roadmap. Not affiliated with Apple, Google or your school.</span>
+    <span>© 2026 Roadmap. Not affiliated with or endorsed by Apple, Google, Instructure or your school. Apple, iPhone, App Store and Apple Intelligence are trademarks of Apple Inc. Google and Google Classroom are trademarks of Google LLC. Canvas is a trademark of Instructure, Inc.</span>
     <nav aria-label="Footer"><a href="${up}privacy/">Privacy</a><a href="${up}terms/">Terms</a><a href="${up}eula/">License</a><a href="${up}licenses/">Open source</a><a href="${up}support/">Support</a></nav>
   </div>
 </footer>
@@ -88,7 +88,8 @@ write("index.html", page({ depth: 0, title: "Roadmap: know what to work on next"
 
 for (const [slug, desc] of [["privacy", "How Roadmap collects, uses and protects your information."], ["terms", "The terms for using Roadmap."], ["eula", "The license agreement for the Roadmap app."], ["licenses", "Open-source software and AI models used by Roadmap."]]) {
   const d = md(read(`content/${slug}.md`));
-  const body = `<article class="wrap doc"><nav class="toc" aria-label="Policies">${[["privacy", "Privacy"], ["terms", "Terms"], ["eula", "License"], ["licenses", "Open source"], ["support", "Support"]].map(([s, l]) => `<a href="../${s}/"${s === slug ? ' aria-current="page"' : ""}>${l}</a>`).join("")}</nav><h1>${esc(d.title)}</h1>${d.meta ? `<p class="meta">${esc(d.meta)}</p>` : '<p class="meta"></p>'}\n${d.html}</article>`;
+  const site = slug === "privacy" ? `<h2>This website</h2><p>This website sets no cookies and uses no analytics or advertising trackers. It is hosted on GitHub Pages, which, like any web host, receives your IP address and basic request details in its server logs under <a href="https://docs.github.com/site-policy/privacy-policies/github-general-privacy-statement" rel="noopener">GitHub’s privacy statement</a>. We don’t receive or use that information.</p>` : "";
+  const body = `<article class="wrap doc"><nav class="toc" aria-label="Policies">${[["privacy", "Privacy"], ["terms", "Terms"], ["eula", "License"], ["licenses", "Open source"], ["support", "Support"]].map(([s, l]) => `<a href="../${s}/"${s === slug ? ' aria-current="page"' : ""}>${l}</a>`).join("")}</nav><h1>${esc(d.title)}</h1>${d.meta ? `<p class="meta">${esc(d.meta)}</p>` : '<p class="meta"></p>'}\n${d.html}${site}</article>`;
   write(`${slug}/index.html`, page({ depth: 1, title: `${d.title} · Roadmap`, description: desc, body }));
 }
 
