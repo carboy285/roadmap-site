@@ -65,7 +65,7 @@ ${body.replace(/(href|src)="(?!https?:|#|\.\.\/|\.\/|mailto:)/g, `$1="${depth ? 
 <footer>
   <div class="wrap">
     <span>© 2026 Roadmap. Not affiliated with Apple, Google or your school.</span>
-    <nav aria-label="Footer"><a href="${up}privacy/">Privacy</a><a href="${up}terms/">Terms</a><a href="${up}licenses/">Licenses</a><a href="${up}support/">Support</a></nav>
+    <nav aria-label="Footer"><a href="${up}privacy/">Privacy</a><a href="${up}terms/">Terms</a><a href="${up}eula/">License</a><a href="${up}licenses/">Open source</a><a href="${up}support/">Support</a></nav>
   </div>
 </footer>
 <script src="${up}assets/config.js"></script>
@@ -84,12 +84,16 @@ function write(rel, html) {
 const DESC = "Roadmap turns an assignment into a short checklist, fits it into your week, and keeps your due dates. For high school students on iPhone.";
 write("index.html", page({ depth: 0, title: "Roadmap: know what to work on next", description: DESC, body: read("content/home.html") }));
 
-for (const [slug, desc] of [["privacy", "How Roadmap collects, uses and protects your information."], ["terms", "The terms for using Roadmap."], ["licenses", "Open-source software and AI models used by Roadmap."]]) {
+for (const [slug, desc] of [["privacy", "How Roadmap collects, uses and protects your information."], ["terms", "The terms for using Roadmap."], ["eula", "The license agreement for the Roadmap app."], ["licenses", "Open-source software and AI models used by Roadmap."]]) {
   const d = md(read(`content/${slug}.md`));
-  const body = `<article class="wrap doc"><nav class="toc" aria-label="Policies">${[["privacy", "Privacy"], ["terms", "Terms"], ["licenses", "Licenses"], ["support", "Support"]].map(([s, l]) => `<a href="../${s}/"${s === slug ? ' aria-current="page"' : ""}>${l}</a>`).join("")}</nav><h1>${esc(d.title)}</h1>${d.meta ? `<p class="meta">${esc(d.meta)}</p>` : '<p class="meta"></p>'}\n${d.html}</article>`;
+  const body = `<article class="wrap doc"><nav class="toc" aria-label="Policies">${[["privacy", "Privacy"], ["terms", "Terms"], ["eula", "License"], ["licenses", "Open source"], ["support", "Support"]].map(([s, l]) => `<a href="../${s}/"${s === slug ? ' aria-current="page"' : ""}>${l}</a>`).join("")}</nav><h1>${esc(d.title)}</h1>${d.meta ? `<p class="meta">${esc(d.meta)}</p>` : '<p class="meta"></p>'}\n${d.html}</article>`;
   write(`${slug}/index.html`, page({ depth: 1, title: `${d.title} · Roadmap`, description: desc, body }));
 }
 
-const sup = `<article class="wrap doc"><nav class="toc" aria-label="Policies">${[["privacy", "Privacy"], ["terms", "Terms"], ["licenses", "Licenses"], ["support", "Support"]].map(([s, l]) => `<a href="../${s}/"${s === "support" ? ' aria-current="page"' : ""}>${l}</a>`).join("")}</nav>${read("content/support.html")}</article>`;
+const sup = `<article class="wrap doc"><nav class="toc" aria-label="Policies">${[["privacy", "Privacy"], ["terms", "Terms"], ["eula", "License"], ["licenses", "Open source"], ["support", "Support"]].map(([s, l]) => `<a href="../${s}/"${s === "support" ? ' aria-current="page"' : ""}>${l}</a>`).join("")}</nav>${read("content/support.html")}</article>`;
 write("support/index.html", page({ depth: 1, title: "Support · Roadmap", description: "Get help with Roadmap for iPhone.", body: sup }));
+{
+  const t = read("content/eula.md").split("\n").map((l) => l.replace(/^#{1,2} /, "").replace(/\*\*(.+?)\*\*/g, "$1")).join("\n");
+  write("eula.txt", t.replace(/^License Agreement\n/, "LICENSE AGREEMENT\n"));
+}
 console.log("built");
