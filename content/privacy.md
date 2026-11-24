@@ -64,7 +64,7 @@ They process data for us under their own terms and may not use it for their own 
 
 ## Keeping and deleting your data
 
-We keep your plan while your account exists. To delete everything, open **Settings, Account, Delete Roadmap account** and type your email to confirm. Deletion removes your plan, Classroom and Canvas connections, notification tokens, share links, subscription records and sign-in record from our systems, and revokes Roadmap's access to your Google and Apple accounts. Copies in database backups are overwritten as backups rotate out. You can also email {{SUPPORT_EMAIL}} and we'll delete your account for you.
+We keep your plan while your account exists. To delete everything, open **Settings, Account, Delete Roadmap account** and type your email to confirm. Deletion removes your plan, Classroom and Canvas connections, notification tokens, share links and subscription records from our systems, and revokes Roadmap's access to your Google and Apple accounts. If you made your account in Roadmap with an email and password, deletion also deletes your sign-in record. If you sign in with Apple or Google, or we can't confirm that only Roadmap uses your sign-in, we don't delete the sign-in record, because other services may share it. We remove Roadmap's data and access, and the record stays with Apple or Google and our sign-in provider. Copies in database backups are overwritten as backups rotate out. You can also email {{SUPPORT_EMAIL}} and we'll delete your account for you.
 
 ## Your choices and rights
 

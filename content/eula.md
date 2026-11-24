@@ -34,7 +34,7 @@ This agreement lasts until it ends. It ends if you break it, or when you delete 
 
 ## Support
 
-Contact us through the support contact on Roadmap's App Store page. We may update or change the app and may change this agreement. If a change is meaningful, we'll tell you in the app.
+Contact us at thesimpsons006@gmail.com. We may update or change the app and may change this agreement. If a change is meaningful, we'll tell you in the app.
 
 ## No warranty
 
@@ -54,4 +54,4 @@ Apple and its subsidiaries are third-party beneficiaries of this agreement. When
 
 ## Contact
 
-The support contact on Roadmap's App Store page.
+thesimpsons006@gmail.com
