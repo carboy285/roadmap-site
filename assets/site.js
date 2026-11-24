@@ -27,6 +27,13 @@
     items.forEach((el) => io.observe(el));
   }
 
+  // Nav turns to material only once content scrolls under it.
+  const nav = document.querySelector(".nav");
+  let ticking = false;
+  const edge = () => { nav.classList.toggle("scrolled", scrollY > 8); ticking = false; };
+  addEventListener("scroll", () => { if (!ticking) { ticking = true; requestAnimationFrame(edge); } }, { passive: true });
+  edge();
+
   // Interactive demo: tap a step, the ring follows.
   const steps = document.querySelectorAll(".step");
   const fill = document.querySelector(".ring .fill");

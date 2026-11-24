@@ -11,6 +11,9 @@
   --done: #1f9d55;
   --shadow: 0 1px 2px rgba(0, 0, 0, 0.04), 0 12px 40px -12px rgba(0, 0, 0, 0.18);
   --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  /* Springs as easing: smooth is critically damped, bounce is damping 0.8. */
+  --spring: linear(0, 0.0476, 0.1527, 0.2777, 0.402, 0.5154, 0.6135, 0.6957, 0.7628, 0.8167, 0.8594, 0.8927, 0.9186, 0.9385, 0.9537, 0.9653, 0.9741, 0.9807, 0.9856, 0.9894, 0.9921, 0.9942, 0.9957, 0.9968, 0.9977, 0.9983, 0.9987, 0.9991, 0.9993, 0.9995, 0.9996, 0.9997, 0.9998, 0.9999, 1);
+  --spring-bounce: linear(0, 0.0496, 0.1645, 0.3064, 0.4511, 0.5842, 0.6985, 0.7917, 0.8642, 0.9182, 0.9567, 0.9828, 0.9994, 1.009, 1.0137, 1.0151, 1.0146, 1.013, 1.0109, 1.0086, 1.0066, 1.0048, 1.0034, 1.0022, 1.0013, 1.0007, 1.0003, 1, 0.9999, 0.9998, 1);
   --radius: 22px;
   --max: 1080px;
   color-scheme: light dark;
@@ -68,6 +71,10 @@ h3 { font-size: 1.1875rem; line-height: 1.25; letter-spacing: -0.012em; font-wei
 /* Floating glass nav: content scrolls beneath it. */
 .nav {
   position: sticky; top: 0; z-index: 50;
+  background: transparent;
+  transition: background 300ms var(--ease), box-shadow 300ms var(--ease);
+}
+.nav.scrolled {
   background: var(--glass);
   -webkit-backdrop-filter: blur(22px) saturate(180%);
   backdrop-filter: blur(22px) saturate(180%);
@@ -79,7 +86,8 @@ h3 { font-size: 1.1875rem; line-height: 1.25; letter-spacing: -0.012em; font-wei
 .nav ul { display: flex; gap: 1.75rem; list-style: none; padding: 0; font-size: 0.875rem; }
 .nav ul a { text-decoration: none; color: var(--ink-2); transition: color 120ms; }
 .nav ul a:hover, .nav ul a[aria-current] { color: var(--ink); }
-.nav ul a.btn { color: var(--bg); }
+.nav ul a.btn, .nav ul a.btn:hover { color: var(--bg); }
+
 @media (max-width: 640px) { .nav ul li:not(:last-child) { display: none; } }
 
 /* Buttons respond on press, instantly. */
@@ -98,7 +106,7 @@ h3 { font-size: 1.1875rem; line-height: 1.25; letter-spacing: -0.012em; font-wei
 .btn.sm { min-height: 2.25rem; padding: 0 1rem; font-size: 0.875rem; }
 
 /* Hero */
-.hero { padding: clamp(3.5rem, 9vw, 7rem) 0 0; text-align: center; overflow: clip; }
+.hero { padding: clamp(3.5rem, 9vw, 7rem) 0 clamp(2rem, 5vw, 4rem); text-align: center; overflow-x: clip; }
 .hero .lede { max-width: 36ch; margin: 1.5rem auto 0; }
 .hero .cta { display: flex; flex-wrap: wrap; gap: 0.75rem; justify-content: center; margin-top: 2.25rem; }
 .badge { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.35rem 0.9rem; border-radius: 999px; font-size: 0.8125rem; font-weight: 600; color: var(--ink-2); box-shadow: inset 0 0 0 1px var(--line); margin-bottom: 1.5rem; }
@@ -108,15 +116,24 @@ h3 { font-size: 1.1875rem; line-height: 1.25; letter-spacing: -0.012em; font-wei
 .stage { margin-top: clamp(2.5rem, 6vw, 4.5rem); display: grid; place-items: center; position: relative; }
 .stage::before { content: ""; position: absolute; inset: 20% 8% 0; background: radial-gradient(60% 60% at 50% 40%, var(--bg-2), transparent 75%); z-index: -1; }
 .phone {
-  width: min(340px, 82vw); aspect-ratio: 9 / 15;
-  background: var(--card); border-radius: 46px; padding: 12px;
-  box-shadow: 0 0 0 2px var(--line), var(--shadow);
-  margin-bottom: -6rem; text-align: left;
-  -webkit-mask-image: linear-gradient(#000 70%, transparent 100%);
-  mask-image: linear-gradient(#000 70%, transparent 100%);
+  width: min(330px, 82vw); aspect-ratio: 9 / 18;
+  background: var(--card); border-radius: 48px; padding: 11px;
+  box-shadow: 0 0 0 1.5px var(--line), 0 2px 4px rgba(0,0,0,.05), 0 30px 80px -20px rgba(0,0,0,.28);
+  margin-bottom: 0; text-align: left;
+  will-change: transform;
 }
-.screen { height: 100%; border-radius: 36px; background: var(--bg); padding: 1.1rem 1.1rem 0; overflow: hidden; box-shadow: inset 0 0 0 1px var(--line); }
-.island { width: 84px; height: 24px; border-radius: 99px; background: #000; margin: 0 auto 0.9rem; }
+.screen { position: relative; height: 100%; border-radius: 36px; background: var(--bg); padding: 0.9rem 1rem 0; overflow: hidden; box-shadow: inset 0 0 0 1px var(--line); }
+.island { width: 84px; height: 24px; border-radius: 99px; background: #000; margin: 0 auto 0.5rem; }
+.status { display: flex; justify-content: space-between; align-items: center; font-size: 0.75rem; font-weight: 600; padding: 0 0.6rem; margin: -1.9rem 0 1.1rem; height: 1.5rem; }
+.status svg { width: 15px; height: 11px; fill: var(--ink); }
+.next { margin-top: 0.9rem; font-size: 0.8125rem; }
+.next .eyebrow { font-size: 0.6875rem; margin-bottom: 0.4rem; }
+.next div { display: flex; justify-content: space-between; padding: 0.7rem 0.8rem; border-radius: 14px; background: var(--ink); color: var(--bg); font-weight: 600; letter-spacing: -0.01em; }
+.next span { opacity: 0.65; font-weight: 500; }
+.tabs { position: absolute; left: 0; right: 0; bottom: 0; display: flex; justify-content: space-around; padding: 0.7rem 0.5rem 1.1rem; background: var(--glass); -webkit-backdrop-filter: blur(18px) saturate(180%); backdrop-filter: blur(18px) saturate(180%); box-shadow: 0 -1px 0 var(--line); font-size: 0.625rem; font-weight: 600; color: var(--ink-3); }
+.tabs span { display: grid; justify-items: center; gap: 0.2rem; }
+.tabs svg { width: 20px; height: 20px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.tabs .on { color: var(--ink); }
 .screen .date { font-size: 0.75rem; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; color: var(--ink-3); }
 .screen h4 { font-size: 1.5rem; letter-spacing: -0.03em; line-height: 1.1; margin: 0.15rem 0 0.9rem; }
 .ring-row { display: flex; align-items: center; gap: 0.9rem; padding: 0.8rem; border-radius: 16px; background: var(--card); box-shadow: inset 0 0 0 1px var(--line); }
@@ -222,15 +239,78 @@ footer a:hover { color: var(--ink); text-decoration: underline; }
 .js .reveal { opacity: 0; transform: translateY(18px); transition: opacity 700ms var(--ease), transform 700ms var(--ease); transition-delay: var(--d, 0ms); }
 .js .reveal.in { opacity: 1; transform: none; }
 
+
+/* ---------- Polish layer ---------- */
+html { scroll-behavior: smooth; }
+body { overflow-x: clip; }
+
+/* Skip work for sections below the fold. */
+section + section, footer { content-visibility: auto; contain-intrinsic-size: auto 720px; }
+
+/* Hero depth */
+.hero { position: relative; }
+.hero::before { content: ""; position: absolute; inset: -10% -10% auto; height: 70%; z-index: -1; pointer-events: none;
+  background: radial-gradient(50% 50% at 50% 0%, var(--bg-2), transparent 70%); }
+.stage::before { inset: 10% 0 0; background: radial-gradient(45% 55% at 50% 50%, var(--bg-2), transparent 75%); }
+.hero .display { animation: arrive 900ms var(--spring) both; }
+.hero .lede { animation: arrive 900ms var(--spring) 90ms both; }
+.hero .cta, .hero .badge { animation: arrive 900ms var(--spring) 160ms both; }
+.stage { animation: arrive 1100ms var(--spring) 240ms both; }
+@keyframes arrive { from { opacity: 0; transform: translateY(24px); } }
+
+/* Phone drifts as you scroll. Runs on the compositor where supported. */
+@supports (animation-timeline: scroll()) {
+  .phone { animation: drift linear both; animation-timeline: scroll(root); animation-range: 0 60vh; }
+  @keyframes drift { to { transform: translateY(-36px) scale(0.97); } }
+}
+
+/* Cards: spring lift on devices with a real pointer. */
+.card { transition: transform 500ms var(--spring), box-shadow 300ms; }
+@media (hover: hover) and (pointer: fine) {
+  .card:hover { transform: translateY(-4px); box-shadow: inset 0 0 0 1px var(--line), var(--shadow); }
+}
+.card:active { transform: scale(0.985); transition-duration: 120ms; }
+
+/* Bento visuals */
+.card.split { overflow: hidden; }
+.card.split .chat { margin-top: auto; padding-top: 0.6rem; }
+@media (min-width: 700px) { .card.wide.split { flex-direction: row; align-items: center; gap: 2.5rem; } .card.wide.split > div:first-child { flex: 1; display: grid; gap: 0.6rem; } }
+.week { display: grid; grid-template-columns: repeat(5, 1fr); gap: 0.5rem; flex: 1.1; width: 100%; min-height: 9.5rem; align-items: end; }
+.week div { display: grid; gap: 0.35rem; align-content: end; font-size: 0.6875rem; font-weight: 600; color: var(--ink-3); text-align: center; }
+.week i { display: block; border-radius: 9px; background: var(--bg-2); box-shadow: inset 0 0 0 1px var(--line); }
+.week i.a { height: 2rem; } .week i.b { height: 3.4rem; } .week i.c { height: 1.4rem; }
+.week i.on { background: var(--ink); box-shadow: none; }
+.week i.lock { background: transparent; box-shadow: inset 0 0 0 1.5px var(--ink); }
+.chat { display: grid; gap: 0.45rem; font-size: 0.875rem; line-height: 1.35; }
+.chat span { padding: 0.55rem 0.8rem; border-radius: 16px; max-width: 88%; }
+.chat .me { justify-self: end; background: var(--ink); color: var(--bg); border-bottom-right-radius: 5px; }
+.chat .ai { background: var(--bg-2); color: var(--ink); border-bottom-left-radius: 5px; box-shadow: inset 0 0 0 1px var(--line); }
+
+/* Spring-driven reveal and press-release */
+.js .reveal { transition: opacity 600ms var(--ease), transform 900ms var(--spring); transition-delay: var(--d, 0ms); }
+.btn { transition: transform 400ms var(--spring), opacity 120ms; }
+.btn:active { transition-duration: 90ms; }
+.step { transition: transform 400ms var(--spring); }
+.step:active { transition-duration: 90ms; }
+.step .box { transition: background 200ms, box-shadow 200ms, transform 500ms var(--spring-bounce); }
+.step[aria-pressed="true"] .box { animation: pop 500ms var(--spring-bounce); }
+@keyframes pop { from { transform: scale(0.7); } }
+summary { transition: color 120ms; }
+summary:hover { color: var(--ink-2); }
+details > p { animation: arrive 500ms var(--spring) both; }
+
 /* Accessibility signals */
 @media (prefers-reduced-motion: reduce) {
+  .hero .display, .hero .lede, .hero .cta, .hero .badge, .stage, details > p, .step[aria-pressed="true"] .box { animation: none; }
+  .phone { animation: none; }
+  .card, .card:hover, .card:active { transform: none; }
   html { scroll-behavior: auto; }
   .js .reveal { transform: none; transition: opacity 200ms; }
   .ring .fill, .step .box svg, summary::after { transition: none; }
   .btn:active, .step:active { transform: none; }
 }
 @media (prefers-reduced-transparency: reduce) {
-  .nav { background: var(--bg); -webkit-backdrop-filter: none; backdrop-filter: none; }
+  .nav, .nav.scrolled { background: var(--bg); -webkit-backdrop-filter: none; backdrop-filter: none; }
 }
 @media (prefers-contrast: more) {
   :root { --line: rgba(128, 128, 128, 0.7); --ink-2: var(--ink); --ink-3: var(--ink-2); }

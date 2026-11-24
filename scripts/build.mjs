@@ -48,9 +48,11 @@ function page({ depth, title, description, body }) {
 <meta property="og:title" content="${esc(title)}">
 <meta property="og:description" content="${esc(description)}">
 <meta property="og:type" content="website">
+<meta property="og:image" content="https://carboy285.github.io/roadmap-site/assets/icon-512.png">
+<meta name="twitter:card" content="summary">
 <link rel="icon" type="image/png" href="${up}assets/favicon.png">
 <link rel="apple-touch-icon" href="${up}assets/apple-touch-icon.png">
-<link rel="stylesheet" href="${up}assets/site.css">
+${depth === 0 ? `<style>${read("assets/site.css").replace(/\/\*[\s\S]*?\*\//g, "").replace(/\s+/g, " ").replace(/ ?([{};,]) ?/g, "$1")}</style>` : `<link rel="stylesheet" href="${up}assets/site.css">`}
 </head>
 <body>
 <nav class="nav" aria-label="Main">
@@ -68,8 +70,8 @@ ${body.replace(/(href|src)="(?!https?:|#|\.\.\/|\.\/|mailto:)/g, `$1="${depth ? 
     <nav aria-label="Footer"><a href="${up}privacy/">Privacy</a><a href="${up}terms/">Terms</a><a href="${up}eula/">License</a><a href="${up}licenses/">Open source</a><a href="${up}support/">Support</a></nav>
   </div>
 </footer>
-<script src="${up}assets/config.js"></script>
-<script src="${up}assets/site.js"></script>
+<script src="${up}assets/config.js" defer></script>
+<script src="${up}assets/site.js" defer></script>
 </body>
 </html>
 `;
@@ -96,4 +98,6 @@ write("support/index.html", page({ depth: 1, title: "Support · Roadmap", descri
   const t = read("content/eula.md").split("\n").map((l) => l.replace(/^#{1,2} /, "").replace(/\*\*(.+?)\*\*/g, "$1")).join("\n");
   write("eula.txt", t.replace(/^License Agreement\n/, "LICENSE AGREEMENT\n"));
 }
+write("sitemap.xml", `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${["", "privacy/", "terms/", "eula/", "licenses/", "support/"].map((p) => `<url><loc>https://carboy285.github.io/roadmap-site/${p}</loc></url>`).join("\n")}\n</urlset>\n`);
+write("robots.txt", "User-agent: *\nAllow: /\nSitemap: https://carboy285.github.io/roadmap-site/sitemap.xml\n");
 console.log("built");

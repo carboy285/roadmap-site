@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://carboy285.github.io/roadmap-site/sitemap.xml
